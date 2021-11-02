@@ -133,11 +133,33 @@ export default class RibbonContainer extends NoteContextAwareWidget {
         return this;
     }
 
+    ribbons(...widgets) {
+        if (!widgets) {
+            return this;
+        }
+
+        for (const widget of widgets) {
+            this.ribbon(widget);
+        }
+        return this;
+    }
+
     button(widget) {
         super.child(widget);
 
         this.buttonWidgets.push(widget);
 
+        return this;
+    }
+
+    buttons(...widgets) {
+        if (!widgets) {
+            return this;
+        }
+
+        for (const widget of widgets) {
+            this.button(widget);
+        }
         return this;
     }
 
@@ -184,7 +206,7 @@ export default class RibbonContainer extends NoteContextAwareWidget {
             const activeChild = this.getActiveRibbonWidget();
 
             if (activeChild && refreshActiveTab) {
-                activeChild.handleEvent('noteSwitched', {noteContext: this.noteContext, notePath: this.notePath});
+                activeChild.handleEvent('noteSwitched', { noteContext: this.noteContext, notePath: this.notePath });
             }
         } else {
             this.lastActiveComponentId = null;
@@ -209,9 +231,9 @@ export default class RibbonContainer extends NoteContextAwareWidget {
                 .attr('data-ribbon-component-id', ribbonWidget.componentId)
                 .attr('data-ribbon-component-name', ribbonWidget.name)
                 .append($('<span class="ribbon-tab-title-icon">')
-                            .addClass(ret.icon)
-                            .attr("data-title", ret.title)
-                            .attr('data-toggle-command', ribbonWidget.toggleCommand))
+                    .addClass(ret.icon)
+                    .attr("data-title", ret.title)
+                    .attr('data-toggle-command', ribbonWidget.toggleCommand))
                 .append(" ")
                 .append($('<span class="ribbon-tab-title-label">').text(ret.title));
 
@@ -229,7 +251,7 @@ export default class RibbonContainer extends NoteContextAwareWidget {
 
         keyboardActionsService.getActions().then(actions => {
             this.$tabContainer.find('.ribbon-tab-title-icon').tooltip({
-                title: function() {
+                title: function () {
                     const toggleCommandName = $(this).attr("data-toggle-command");
                     const action = actions.find(act => act.actionName === toggleCommandName);
                     const title = $(this).attr("data-title");
@@ -268,11 +290,11 @@ export default class RibbonContainer extends NoteContextAwareWidget {
         }
     }
 
-    addNewLabelEvent({ntxId}) {
+    addNewLabelEvent({ ntxId }) {
         this.ensureOwnedAttributesAreOpen(ntxId);
     }
 
-    addNewRelationEvent({ntxId}) {
+    addNewRelationEvent({ ntxId }) {
         this.ensureOwnedAttributesAreOpen(ntxId);
     }
 
@@ -321,7 +343,7 @@ export default class RibbonContainer extends NoteContextAwareWidget {
         }
     }
 
-    entitiesReloadedEvent({loadResults}) {
+    entitiesReloadedEvent({ loadResults }) {
         if (loadResults.isNoteReloaded(this.noteId) && this.lastNoteType !== this.note.type) {
             // note type influences the list of available ribbon tabs the most
             // check for type is so that we don't update on each title rename
