@@ -198,6 +198,8 @@ export default class RibbonContainer extends NoteContextAwareWidget {
         if (activate) {
             const ribbonComponendId = $ribbonTitle.attr('data-ribbon-component-id');
 
+            const wasAlreadyActive = this.lastActiveComponentId === ribbonComponendId;
+
             this.lastActiveComponentId = ribbonComponendId;
 
             this.$tabContainer.find(`.ribbon-tab-title[data-ribbon-component-id="${ribbonComponendId}"]`).addClass("active");
@@ -205,7 +207,7 @@ export default class RibbonContainer extends NoteContextAwareWidget {
 
             const activeChild = this.getActiveRibbonWidget();
 
-            if (activeChild && refreshActiveTab) {
+            if (activeChild && (refreshActiveTab || !wasAlreadyActive)) {
                 activeChild.handleEvent('noteSwitched', { noteContext: this.noteContext, notePath: this.notePath });
             }
         } else {
